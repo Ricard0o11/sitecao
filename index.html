@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home | Loja do Brinquedo Cão</title>
+<link rel="icon" href="assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ===================== HEADER ===================== -->
+<header>
+  <a class="logo" href="#top"><img src="assets/logo.png" alt="Logo" data-img="logo"></a>
+  <nav>
+    <a href="#top" class="active" data-e="nav1">Home</a>
+    <a href="#solucao" data-e="nav2">Sobre nós</a>
+    <a href="#pensado" data-e="nav3">Our Dogs</a>
+    <a href="#contacto" data-e="nav4">Contact</a>
+    <a href="#compromisso" data-e="nav5">Adoption Process</a>
+  </nav>
+  <div class="header-right">
+    <button class="cart" id="cartBtn" aria-label="Carrinho">
+      <svg viewBox="0 0 24 26"><path d="M12 0a5 5 0 0 0-5 5v2H3.5a1.5 1.5 0 0 0-1.5 1.6l1 14A3.5 3.5 0 0 0 6.5 26h11a3.5 3.5 0 0 0 3.5-3.4l1-14A1.5 1.5 0 0 0 20.5 7H17V5a5 5 0 0 0-5-5Zm-3 5a3 3 0 1 1 6 0v2H9V5Z"/></svg>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+    <a class="ver-brinquedo" href="#produtos" data-e="navcta">VER BRINQUEDO</a>
+  </div>
+</header>
+
+<div class="cart-panel" id="cartPanel">
+  <h4>O seu carrinho</h4>
+  <div id="cartItems"><p class="cart-empty">Ainda está vazio… adicione um brinquedo! 🐶</p></div>
+</div>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <h1 data-e="h_titulo">Comer a brincar</h1>
+    <p data-e="h_para">Mais do que um alimentador, um jogo de paciência e recompensa. Este brinquedo modular distribui a ração pausadamente, estimulando a mente do teu cão enquanto garante uma digestão muito mais calma e segura.</p>
+    <a class="btn" href="#produtos" data-e="h_btn">VER BRINQUEDO</a>
+  </div>
+  <span class="sparkle">✦</span>
+</section>
+
+<!-- ===================== BENEFÍCIOS ===================== -->
+<section class="beneficios">
+  <div class="cards3">
+    <div class="card reveal">
+      <h3 data-e="b1t">Mastigação Lenta</h3>
+      <p data-e="b1p">O Dogger incentiva o seu cão a comer calmamente, transformando cada refeição num desafio divertido e saudável.</p>
+    </div>
+    <div class="card reveal d1">
+      <h3 data-e="b2t">Energia &amp; Ansiedade</h3>
+      <p data-e="b2p">O nosso Brinquedo Interativo gasta a energia do seu cão e reduz a ansiedade através do estímulo cognitivo.</p>
+    </div>
+    <div class="card reveal d2">
+      <h3 data-e="b3t">Materiais Seguros</h3>
+      <p data-e="b3p">Fabricados com borracha natural não tóxica e ultra-resistente, disponíveis em vários tamanhos para todas as raças.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== A SOLUÇÃO COMPLETA ===================== -->
+<section class="solucao" id="solucao">
+  <h2 class="reveal" data-e="s_t">A Solução Completa para o seu Cão</h2>
+  <div class="solucao-grid">
+    <img class="reveal" src="assets/duo.jpg" alt="Dogger e Brinquedo Interativo" data-img="duo">
+    <div class="reveal d1">
+      <p class="intro" data-e="s_intro">Focamos em apenas dois produtos porque acreditamos na excelência. O Dogger e o nosso Brinquedo Interativo são a resposta para um dia a dia equilibrado: promovem uma alimentação lenta, gastam energia de forma saudável e reduzem a ansiedade.</p>
+      <div class="feature" data-e="s_f1"><b>Materiais Seguros:</b> Fabricados com borracha natural não tóxica, ultra-resistente e duradoura.</div>
+      <div class="feature" data-e="s_f2"><b>Vários Tamanhos:</b> Adaptados ao detalhe para cães de todas as raças e idades.</div>
+      <div class="feature" data-e="s_f3"><b>Bem-estar Mental:</b> Estimulam o instinto natural e promovem a felicidade em cada dentada.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== COLEÇÃO ===================== -->
+<section class="colecao" id="colecao">
+  <div class="colecao-grid">
+    <div class="reveal">
+      <h2 data-e="c_t">A Nossa Coleção Especializada</h2>
+      <p data-e="c_p">Conheça o Dogger e o nosso Brinquedo Interativo: a dupla essencial para o dia a dia. Focados em estimular o instinto e garantir alimentação pausada, é fundamental escolher o tamanho certo para o conforto do seu cão.</p>
+      <a class="btn" href="#produtos" data-e="c_btn">EXPLORAR COLEÇÃO</a>
+    </div>
+    <img class="reveal d1" src="assets/colecao.jpg" alt="O Dogger e Brinquedo Interativo" data-img="colecao">
+  </div>
+</section>
+
+<!-- ===================== PENSADO AO DETALHE ===================== -->
+<section class="pensado" id="pensado">
+  <div class="pensado-grid">
+    <img class="reveal" src="assets/golden.jpg" alt="Cão a brincar com bola" data-img="golden">
+    <div class="reveal d1">
+      <h2 data-e="p_t">Pensado ao Detalhe</h2>
+      <p data-e="p_p">Mesmo focados em apenas dois produtos, cada um foi pensado minuciosamente. Ter uma gama curta permite-nos garantir que o Dogger e o nosso Brinquedo Interativo são perfeitamente adaptados às necessidades reais e aos diferentes tamanhos de cães.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PRODUTOS ===================== -->
+<section class="produtos" id="produtos">
+  <h2 class="reveal" data-e="pr_t">Diversão e Resistência Máxima</h2>
+  <p class="sub reveal" data-e="pr_s">Descubra brinquedos projetados para durar, garantindo segurança e entretenimento infinito para o seu melhor amigo.</p>
+  <div class="prod-grid">
+    <div class="prod-card reveal">
+      <img src="assets/bola.jpg" alt="Bola vermelha" data-img="bola">
+      <h3 data-e="pr1t">Bolas Indestrutíveis</h3>
+      <p data-e="pr1p">Feitas de borracha natural ultra resistente, perfeitas para buscar e morder sem parar.</p>
+      <button class="btn-blue add-cart" data-name="Bola Indestrutível" data-e="pr1b">COMPRAR AGORA</button>
+    </div>
+    <div class="prod-card destaque reveal d1">
+      <img src="assets/mordedor.jpg" alt="Mordedor azul" data-img="mordedor">
+      <h3 data-e="pr2t">Mordedores Ergonómicos</h3>
+      <p data-e="pr2p">Desenvolvidos para satisfazer o instinto de roer enquanto auxiliam na saúde oral.</p>
+      <button class="btn-blue add-cart" data-name="Mordedor Ergonómico" data-e="pr2b">COMPRAR AGORA</button>
+    </div>
+    <div class="prod-card reveal d2">
+      <img src="assets/corda.jpg" alt="Corda reforçada" data-img="corda">
+      <h3 data-e="pr3t">Cordas Reforçadas</h3>
+      <p data-e="pr3p">Fibras naturais de alta densidade para jogos intensos de tração e muita diversão.</p>
+      <button class="btn-blue add-cart" data-name="Corda Reforçada" data-e="pr3b">COMPRAR AGORA</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== COMPROMISSO ===================== -->
+<div class="compromisso-wrap" id="compromisso">
+  <section class="compromisso reveal">
+    <h2 data-e="g_t">O Nosso Compromisso e Garantia</h2>
+    <p data-e="g_p">Garantimos satisfação total e qualidade inabalável em cada brinquedo. O nosso apoio ao cliente está sempre disponível para acompanhar o seu cão em todas as fases da vida, com total foco na segurança e bem-estar.</p>
+  </section>
+</div>
+
+<!-- ===================== FAMÍLIAS FELIZES ===================== -->
+<section class="familias" id="familias">
+  <h2 class="reveal" data-e="f_t">Famílias Felizes</h2>
+  <p class="sub reveal" data-e="f_s">Veja como o Dogger e o Brinquedo Interativo mudaram a rotina e trouxeram mais alegria para estes lares.</p>
+  <div class="depo-grid">
+    <div class="depo reveal">
+      <img src="assets/depo1.jpg" alt="" data-img="depo1">
+      <div class="depo-body">
+        <h3 data-e="f1n">— Joana, dona do Max</h3>
+        <p data-e="f1p">O Dogger salvou o estômago do Max! Ele costumava devorar tudo em segundos, agora come devagar e de forma divertida.</p>
+      </div>
+    </div>
+    <div class="depo reveal d1">
+      <img src="assets/depo2.jpg" alt="" data-img="depo2">
+      <div class="depo-body">
+        <h3 data-e="f2n">— Rui, dono da Luna</h3>
+        <p data-e="f2p">O Brinquedo Interativo é perfeito para gastar energia nos dias de chuva. A Luna fica focada e muito mais calma depois.</p>
+      </div>
+    </div>
+    <div class="depo reveal d2">
+      <img src="assets/depo3.jpg" alt="" data-img="depo3">
+      <div class="depo-body">
+        <h3 data-e="f3n">— Filipa, dona do Thor</h3>
+        <p data-e="f3p">Materiais super seguros e resistentes. O Thor adora o desafio de tirar a ração do Dogger. Recomendo vivamente!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== VÍDEO ===================== -->
+<section class="video-sec">
+  <video poster="assets/puppies.jpg" autoplay muted loop playsinline data-img="video">
+    <source src="assets/puppies.webm" type="video/webm">
+    <source src="assets/puppies.mp4" type="video/mp4">
+  </video>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer id="contacto">
+  <div class="footer-grid">
+    <div class="snora"><img src="assets/snora.png" alt="SNORA" data-img="snora"></div>
+    <div class="footer-col" data-e="ft_morada">Avenida da Liberdade, 110<br>1250-146 Lisboa, Portugal</div>
+    <div class="footer-col" data-e="ft_contacto">+351 210 000 000<br>info@lojadobrinquedocao.com</div>
+    <div class="social">
+      <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.7c0-.9.3-1.6 1.6-1.6h1.7V4.2c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.4H7.4V14h2.7v8h3.4Z"/></svg></a>
+      <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4 1.2-.1 1.6-.1 4.8-.1Zm0 1.8c-3.1 0-3.5 0-4.7.1-1.1.1-1.5.2-1.9.4-.5.2-.8.4-1.1.7-.3.3-.6.7-.7 1.1-.1.4-.3.8-.4 1.9-.1 1.2-.1 1.6-.1 4.7s0 3.5.1 4.7c.1 1.1.2 1.5.4 1.9.2.5.4.8.7 1.1.3.3.7.6 1.1.7.4.1.8.3 1.9.4 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1.1-.1 1.5-.2 1.9-.4.5-.2.8-.4 1.1-.7.3-.3.6-.7.7-1.1.1-.4.3-.8.4-1.9.1-1.2.1-1.6.1-4.7s0-3.5-.1-4.7c-.1-1.1-.2-1.5-.4-1.9-.2-.5-.4-.8-.7-1.1-.3-.3-.7-.6-1.1-.7-.4-.1-.8-.3-1.9-.4-1.2-.1-1.6-.1-4.7-.1Zm0 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 1.8a3.2 3.2 0 1 0 0 6.4 3.2 3.2 0 0 0 0-6.4Zm5.2-3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4Z"/></svg></a>
+      <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24"><path d="M16.6 3c.3 2 1.6 3.5 3.6 3.7v3c-1.4 0-2.6-.4-3.7-1.2v6.3c0 4.2-3.4 6.5-6.6 5.7-2.7-.6-4.5-3.2-4-6 .5-2.8 3-4.7 5.9-4.4v3.1c-.4-.1-.8-.1-1.2 0-1.2.3-1.9 1.3-1.8 2.5.2 1.2 1.2 2 2.4 1.9 1.2 0 2-.9 2-2.3V3h3.4Z"/></svg></a>
+    </div>
+  </div>
+  <div class="footer-links">
+    <a href="#" data-e="ft_l1">Declaração de Acessibilidade</a>
+    <a href="#" data-e="ft_l2">Política de Privacidade</a>
+  </div>
+  <div class="footer-bar" data-e="ft_bar">© 2026 by LOJA DO BRINQUEDO CÃO. Todos os direitos reservados.</div>
+</footer>
+
+<!-- ===================== EDIÇÃO ===================== -->
+<button class="edit-fab" id="editFab">✏️ Editar site</button>
+<div class="edit-toolbar">
+  <span class="edit-hint">Clique no texto para escrever · clique numa imagem para a substituir</span>
+  <button class="et-save" id="etSave">💾 Guardar</button>
+  <button class="et-reset" id="etReset">↩ Repor original</button>
+  <button class="et-exit" id="etExit">Sair</button>
+</div>
+<div class="toast" id="toast"></div>
+<input type="file" id="imgPicker" accept="image/*,video/mp4" hidden>
+
+<script src="js/script.js" defer></script>
+</body>
+</html>
