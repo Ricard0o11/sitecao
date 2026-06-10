@@ -87,7 +87,8 @@
   .produtos{background:var(--cream-bg)}
   .produtos h2{font-size:clamp(38px,5vw,62px);margin-bottom:14px}
   .produtos .sub{font-size:15px;color:#4a4a4a;line-height:1.6;max-width:420px;margin-bottom:56px}
-  .prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:34px;max-width:1180px;margin:0 auto}
+  /* auto-fit: a grelha cresce até 3 colunas conforme se adicionam produtos e centra quando há menos */
+  .prod-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,360px));justify-content:center;gap:34px;max-width:1180px;margin:0 auto}
   .prod-card{background:var(--card-white);border-radius:22px;padding:30px 30px 38px;text-align:left;
     box-shadow:0 5px 20px rgba(0,0,0,.06);transition:transform .35s, box-shadow .35s}
   .prod-card:hover{transform:translateY(-8px);box-shadow:0 18px 40px rgba(0,0,0,.12)}
@@ -101,6 +102,17 @@
     padding:13px 26px;border-radius:999px;transition:transform .25s, filter .25s, box-shadow .25s}
   .btn-blue:hover{transform:translateY(-2px);filter:brightness(1.07);box-shadow:0 8px 18px rgba(74,127,212,.35)}
   .prod-card.destaque .btn-blue{background:#fff}
+
+  /* ===== SELETOR DE TAMANHO ===== */
+  .sizes{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+  .sizes-label{font-size:13px;font-weight:600;color:#3b3b3b;margin-right:2px}
+  .size-btn{background:transparent;border:1.5px solid var(--wine);color:var(--wine);border-radius:999px;
+    padding:8px 16px;font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;
+    transition:background .2s, color .2s, transform .2s}
+  .size-btn:hover{transform:translateY(-2px)}
+  .size-btn.selected{background:var(--wine);color:var(--cream)}
+  .prod-card.destaque .size-btn{border-color:#15355c;color:#15355c}
+  .prod-card.destaque .size-btn.selected{background:#15355c;color:#fff}
 
   /* ===== COMPROMISSO ===== */
   .compromisso-wrap{background:var(--cream-bg);padding:40px 2% 90px}

@@ -1,3 +1,39 @@
+/* ============ PRODUTOS ============
+   Para adicionar um brinquedo novo, basta acrescentar um objeto a esta lista.
+   - id: identificador único (usado para guardar edições de texto/imagem)
+   - tamanhos: lista de tamanhos disponíveis (pode ficar vazia se não houver) */
+const PRODUTOS = [
+  {
+    id: 'dogger',
+    nome: 'Dogger',
+    descricao: 'Alimentador interativo em borracha natural não tóxica: distribui a ração pausadamente, estimula a mente do seu cão e garante uma digestão calma.',
+    img: 'assets/bola.jpg',
+    tamanhos: ['Pequeno', 'Médio', 'Grande'],
+    destaque: true
+  }
+];
+
+const prodGrid = document.getElementById('prodGrid');
+prodGrid.innerHTML = PRODUTOS.map((p, i) => `
+  <div class="prod-card${p.destaque ? ' destaque' : ''} reveal${i ? ' d' + Math.min(i, 3) : ''}">
+    <img src="${p.img}" alt="${p.nome}" data-img="prod_${p.id}">
+    <h3 data-e="prod_${p.id}_t">${p.nome}</h3>
+    <p data-e="prod_${p.id}_p">${p.descricao}</p>
+    ${p.tamanhos.length ? `
+    <div class="sizes" role="group" aria-label="Tamanho">
+      <span class="sizes-label">Tamanho:</span>
+      ${p.tamanhos.map((t, j) => `<button class="size-btn${j === 0 ? ' selected' : ''}" data-size="${t}">${t}</button>`).join('')}
+    </div>` : ''}
+    <button class="btn-blue add-cart" data-name="${p.nome}" data-e="prod_${p.id}_b">COMPRAR AGORA</button>
+  </div>`).join('');
+
+prodGrid.addEventListener('click', e => {
+  const btn = e.target.closest('.size-btn');
+  if (!btn || document.body.classList.contains('editing')) return;
+  btn.closest('.sizes').querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+});
+
 /* ============ REVELAÇÃO AO SCROLL ============ */
 const io = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
@@ -53,9 +89,11 @@ cartItems.addEventListener('click', e => {
 });
 document.querySelectorAll('.add-cart').forEach(b => b.addEventListener('click', () => {
   if (document.body.classList.contains('editing')) return;
-  cart.push(b.dataset.name);
+  const size = b.closest('.prod-card')?.querySelector('.size-btn.selected')?.dataset.size;
+  const item = size ? `${b.dataset.name} (${size})` : b.dataset.name;
+  cart.push(item);
   renderCart();
-  showToast('🛒 ' + b.dataset.name + ' adicionado ao carrinho!');
+  showToast('🛒 ' + item + ' adicionado ao carrinho!');
 }));
 renderCart();
 
