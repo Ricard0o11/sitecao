@@ -189,6 +189,67 @@ picker.addEventListener('change', () => {
   picker.value = '';
 });
 
+/* ============ PALETA DE CORES ============
+   Para criar uma paleta nova, basta acrescentar uma entrada a PALETAS. */
+const PALETAS = {
+  original: {
+    nome: 'Original',
+    cores: {
+      '--cream': '#FBFACF', '--cream-bg': '#FCFBEF',
+      '--wine': '#4B0B22', '--wine-dark': '#3A0517', '--wine-hover': '#69163A',
+      '--pink': '#EFE4E7',
+      '--blue': '#8AC4FC', '--blue-name': '#4A7FD4', '--blue-ink': '#15355C',
+      '--card-white': '#FDFCF6', '--ink': '#2A2A2A'
+    }
+  },
+  azulbebe: {
+    nome: 'Azul Bebé',
+    cores: {
+      '--cream': '#D9EDFB', '--cream-bg': '#F2F9FE',
+      '--wine': '#1F5E8C', '--wine-dark': '#16466A', '--wine-hover': '#2D76AB',
+      '--pink': '#E2F1FC',
+      '--blue': '#89CFF0', '--blue-name': '#3E7BC0', '--blue-ink': '#14456B',
+      '--card-white': '#FDFEFF', '--ink': '#243341'
+    }
+  },
+  verde: {
+    nome: 'Verde Campo',
+    cores: {
+      '--cream': '#E9F3D8', '--cream-bg': '#F7FBEF',
+      '--wine': '#2F5D2E', '--wine-dark': '#224724', '--wine-hover': '#3F7A3E',
+      '--pink': '#E4EFDB',
+      '--blue': '#A9D8A0', '--blue-name': '#4E8B4C', '--blue-ink': '#1D4A1F',
+      '--card-white': '#FCFEF8', '--ink': '#2A332A'
+    }
+  }
+};
+
+const PAL_KEY = 'snora_palette';
+const paletteFab = document.getElementById('paletteFab');
+const palettePanel = document.getElementById('palettePanel');
+
+palettePanel.innerHTML = '<h4>Cores do site</h4>' + Object.entries(PALETAS).map(([id, p]) => `
+  <button class="pal-opt" data-pal="${id}">
+    <span class="pal-dots">${['--wine', '--cream', '--blue'].map(k => `<i style="background:${p.cores[k]}"></i>`).join('')}</span>
+    ${p.nome}
+  </button>`).join('');
+
+function applyPalette(id) {
+  const p = PALETAS[id] || PALETAS.original;
+  Object.entries(p.cores).forEach(([k, v]) => document.documentElement.style.setProperty(k, v));
+  palettePanel.querySelectorAll('.pal-opt').forEach(b => b.classList.toggle('selected', PALETAS[b.dataset.pal] === p));
+  localStorage.setItem(PAL_KEY, id);
+}
+applyPalette(localStorage.getItem(PAL_KEY) || 'original');
+
+paletteFab.addEventListener('click', () => palettePanel.classList.toggle('open'));
+palettePanel.addEventListener('click', e => {
+  const b = e.target.closest('.pal-opt');
+  if (!b) return;
+  applyPalette(b.dataset.pal);
+  showToast('🎨 Paleta ' + (PALETAS[b.dataset.pal] || PALETAS.original).nome + ' aplicada!');
+});
+
 /* evitar seguir links durante a edição */
 document.querySelectorAll('a[data-e]').forEach(a =>
   a.addEventListener('click', e => { if (document.body.classList.contains('editing')) e.preventDefault(); }));

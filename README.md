@@ -41,3 +41,9 @@ A grelha ajusta-se sozinha ao número de produtos (até 3 por linha).
 Clica no botão **✏️ Editar site** (canto inferior direito) para alterar textos
 e substituir imagens. **Guardar** mantém as alterações no teu navegador;
 **Repor original** desfaz tudo.
+
+## Paleta de cores
+O botão **🎨** (por cima do botão de edição) muda as cores de todo o site.
+Há três paletas: **Original** (vinho/creme), **Azul Bebé** e **Verde Campo**;
+a escolha fica guardada no navegador. Para criar uma paleta nova, acrescenta
+uma entrada ao objeto `PALETAS` em `js/script.js` com as mesmas variáveis.
