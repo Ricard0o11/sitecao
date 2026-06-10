@@ -15,7 +15,8 @@ Faz duplo clique em `index.html` — abre no browser, sem instalar nada.
 ## Produtos
 Os cards de produto são gerados a partir da lista `PRODUTOS` no início de
 `js/script.js`. Neste momento há um único brinquedo (o **Dogger**), com três
-tamanhos (Pequeno, Médio e Grande) que ficam registados no carrinho.
+tamanhos (Pequeno, Médio e Grande), cada um com o seu preço. O tamanho e o
+preço escolhidos ficam registados no carrinho, que mostra o total.
 
 Para adicionar um brinquedo novo, acrescenta um objeto à lista:
 
@@ -25,7 +26,11 @@ Para adicionar um brinquedo novo, acrescenta um objeto à lista:
   nome: 'Corda Reforçada',
   descricao: 'Fibras naturais de alta densidade para jogos de tração.',
   img: 'assets/corda.jpg',           // coloca a imagem na pasta assets/
-  tamanhos: ['Pequeno', 'Grande'],   // ou [] se não tiver tamanhos
+  tamanhos: [                        // cada tamanho com o seu preço…
+    { nome: 'Pequeno', preco: 9.99 },
+    { nome: 'Grande',  preco: 14.99 }
+  ],
+  // …ou, se não tiver tamanhos: tamanhos: [] e preco: 12.99
   destaque: false                    // true realça o card a azul
 }
 ```

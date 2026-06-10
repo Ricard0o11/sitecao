@@ -1,20 +1,28 @@
 /* ============ PRODUTOS ============
    Para adicionar um brinquedo novo, basta acrescentar um objeto a esta lista.
    - id: identificador único (usado para guardar edições de texto/imagem)
-   - tamanhos: lista de tamanhos disponíveis (pode ficar vazia se não houver) */
+   - tamanhos: lista de { nome, preco }; se não houver tamanhos usa [] e define "preco" */
 const PRODUTOS = [
   {
     id: 'dogger',
     nome: 'Dogger',
     descricao: 'Alimentador interativo em borracha natural não tóxica: distribui a ração pausadamente, estimula a mente do seu cão e garante uma digestão calma.',
     img: 'assets/bola.jpg',
-    tamanhos: ['Pequeno', 'Médio', 'Grande'],
+    tamanhos: [
+      { nome: 'Pequeno', preco: 14.99 },
+      { nome: 'Médio',   preco: 19.99 },
+      { nome: 'Grande',  preco: 24.99 }
+    ],
     destaque: true
   }
 ];
 
+const fmtPreco = v => v.toFixed(2).replace('.', ',') + ' €';
+
 const prodGrid = document.getElementById('prodGrid');
-prodGrid.innerHTML = PRODUTOS.map((p, i) => `
+prodGrid.innerHTML = PRODUTOS.map((p, i) => {
+  const precoInicial = p.tamanhos.length ? p.tamanhos[0].preco : (p.preco || 0);
+  return `
   <div class="prod-card${p.destaque ? ' destaque' : ''} reveal${i ? ' d' + Math.min(i, 3) : ''}">
     <img src="${p.img}" alt="${p.nome}" data-img="prod_${p.id}">
     <h3 data-e="prod_${p.id}_t">${p.nome}</h3>
@@ -22,16 +30,24 @@ prodGrid.innerHTML = PRODUTOS.map((p, i) => `
     ${p.tamanhos.length ? `
     <div class="sizes" role="group" aria-label="Tamanho">
       <span class="sizes-label">Tamanho:</span>
-      ${p.tamanhos.map((t, j) => `<button class="size-btn${j === 0 ? ' selected' : ''}" data-size="${t}">${t}</button>`).join('')}
+      <div class="size-opts">
+        ${p.tamanhos.map((t, j) => `<button class="size-btn${j === 0 ? ' selected' : ''}" data-size="${t.nome}" data-preco="${t.preco}">${t.nome}</button>`).join('')}
+      </div>
     </div>` : ''}
-    <button class="btn-blue add-cart" data-name="${p.nome}" data-e="prod_${p.id}_b">COMPRAR AGORA</button>
-  </div>`).join('');
+    <div class="prod-buy">
+      <span class="prod-price">${fmtPreco(precoInicial)}</span>
+      <button class="btn-blue add-cart" data-name="${p.nome}" data-preco="${precoInicial}" data-e="prod_${p.id}_b">COMPRAR AGORA</button>
+    </div>
+  </div>`;
+}).join('');
 
 prodGrid.addEventListener('click', e => {
   const btn = e.target.closest('.size-btn');
   if (!btn || document.body.classList.contains('editing')) return;
-  btn.closest('.sizes').querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+  const card = btn.closest('.prod-card');
+  card.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
+  card.querySelector('.prod-price').textContent = fmtPreco(+btn.dataset.preco);
 });
 
 /* ============ REVELAÇÃO AO SCROLL ============ */
@@ -65,7 +81,9 @@ function showToast(msg) {
 }
 
 /* ============ CARRINHO ============ */
-let cart = JSON.parse(localStorage.getItem('snora_cart') || '[]');
+/* cada item é { n: nome, p: preço }; entradas antigas em formato texto são descartadas */
+let cart = (JSON.parse(localStorage.getItem('snora_cart') || '[]') || [])
+  .filter(i => i && typeof i === 'object' && i.n);
 const cartCount = document.getElementById('cartCount');
 const cartPanel = document.getElementById('cartPanel');
 const cartItems = document.getElementById('cartItems');
@@ -75,25 +93,32 @@ function renderCart() {
   if (!cart.length) {
     cartItems.innerHTML = '<p class="cart-empty">Ainda está vazio… adicione um brinquedo! 🐶</p>';
   } else {
-    const counts = {};
-    cart.forEach(n => counts[n] = (counts[n] || 0) + 1);
-    cartItems.innerHTML = Object.entries(counts).map(([n, q]) =>
-      `<div class="cart-item"><span>${n} × ${q}</span><button data-rm="${n}" title="Remover">✕</button></div>`).join('');
+    const groups = {};
+    cart.forEach(i => {
+      const g = groups[i.n] = groups[i.n] || { q: 0, p: i.p || 0 };
+      g.q++;
+    });
+    const total = cart.reduce((s, i) => s + (i.p || 0), 0);
+    cartItems.innerHTML = Object.entries(groups).map(([n, g]) =>
+      `<div class="cart-item"><span>${n} × ${g.q}</span>
+        <span class="cart-line"><b>${fmtPreco(g.p * g.q)}</b><button data-rm="${n}" title="Remover">✕</button></span></div>`).join('')
+      + `<div class="cart-total"><span>Total</span><b>${fmtPreco(total)}</b></div>`;
   }
   localStorage.setItem('snora_cart', JSON.stringify(cart));
 }
 document.getElementById('cartBtn').addEventListener('click', () => cartPanel.classList.toggle('open'));
 cartItems.addEventListener('click', e => {
   const rm = e.target.dataset.rm;
-  if (rm) { cart.splice(cart.indexOf(rm), 1); renderCart(); }
+  if (rm) { cart.splice(cart.findIndex(i => i.n === rm), 1); renderCart(); }
 });
 document.querySelectorAll('.add-cart').forEach(b => b.addEventListener('click', () => {
   if (document.body.classList.contains('editing')) return;
-  const size = b.closest('.prod-card')?.querySelector('.size-btn.selected')?.dataset.size;
-  const item = size ? `${b.dataset.name} (${size})` : b.dataset.name;
-  cart.push(item);
+  const sel = b.closest('.prod-card')?.querySelector('.size-btn.selected');
+  const nome = sel ? `${b.dataset.name} (${sel.dataset.size})` : b.dataset.name;
+  const preco = +(sel ? sel.dataset.preco : b.dataset.preco) || 0;
+  cart.push({ n: nome, p: preco });
   renderCart();
-  showToast('🛒 ' + item + ' adicionado ao carrinho!');
+  showToast('🛒 ' + nome + ' adicionado ao carrinho!');
 }));
 renderCart();
 
