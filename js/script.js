@@ -23,7 +23,7 @@ const prodGrid = document.getElementById('prodGrid');
 prodGrid.innerHTML = PRODUTOS.map((p, i) => {
   const precoInicial = p.tamanhos.length ? p.tamanhos[0].preco : (p.preco || 0);
   return `
-  <div class="prod-card${p.destaque ? ' destaque' : ''} reveal${i ? ' d' + Math.min(i, 3) : ''}">
+  <div class="prod-card${p.destaque ? ' destaque' : ''} reveal-zoom${i ? ' d' + Math.min(i, 3) : ''}">
     <img src="${p.img}" alt="${p.nome}" data-img="prod_${p.id}">
     <h3 data-e="prod_${p.id}_t">${p.nome}</h3>
     <p data-e="prod_${p.id}_p">${p.descricao}</p>
@@ -54,7 +54,7 @@ prodGrid.addEventListener('click', e => {
 const io = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
 }, { threshold: 0.15 });
-document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-zoom').forEach(el => io.observe(el));
 
 /* ============ PARALLAX SUAVE NO HERO ============ */
 const hero = document.querySelector('.hero');
