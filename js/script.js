@@ -64,14 +64,6 @@ const io = new IntersectionObserver(entries => {
 }, { threshold: 0.12, rootMargin: '-8% 0px -8% 0px' });
 document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-zoom').forEach(el => io.observe(el));
 
-/* ============ PARALLAX SUAVE NO HERO ============ */
-const hero = document.querySelector('.hero');
-window.addEventListener('scroll', () => {
-  const y = window.scrollY;
-  // parallax subtil a partir da posição-base (32%), sem saltar para o topo da foto
-  if (y < window.innerHeight) hero.style.backgroundPosition = 'center calc(32% + ' + (y * 0.12) + 'px)';
-}, { passive: true });
-
 /* ============ LINK ATIVO NO MENU ============ */
 const navLinks = document.querySelectorAll('nav a');
 navLinks.forEach(a => a.addEventListener('click', () => {
