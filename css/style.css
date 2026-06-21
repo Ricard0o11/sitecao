@@ -164,10 +164,9 @@
   .depo{background:var(--card-white);border-radius:20px;overflow:hidden;text-align:left;
     box-shadow:0 5px 20px rgba(0,0,0,.05);transition:transform .35s, box-shadow .35s}
   .depo:hover{transform:translateY(-8px);box-shadow:0 16px 34px rgba(0,0,0,.1)}
-  .depo img{width:100%;aspect-ratio:1.9;object-fit:cover}
-  /* fotos verticais: ajusta o ponto de recorte para mostrar a cara do cão */
-  .depo img[data-img="depo1"]{object-position:center 28%}
-  .depo img[data-img="depo3"]{object-position:center 30%}
+  /* retrato 3:4 = mesmo rácio das fotos, por isso mostra a foto inteira
+     (o cão E o brinquedo, sem cortar) */
+  .depo img{width:100%;aspect-ratio:3/4;object-fit:cover}
   .depo-body{padding:26px 28px 34px}
   .depo-body h3{font-family:'Fraunces',Georgia,serif;color:var(--blue-name);font-size:19px;margin-bottom:14px}
   .depo-body p{font-size:14px;line-height:1.7;color:#3b3b3b}
