@@ -131,64 +131,6 @@ document.querySelectorAll('.add-cart').forEach(b => b.addEventListener('click', 
 }));
 renderCart();
 
-/* ============ MODO DE EDIÇÃO ============ */
-const EDIT_KEY = 'snora_edits';
-const fab = document.getElementById('editFab');
-
-/* Só o TEXTO é editável — as imagens são fixas, para não perderem qualidade.
-   Aplica primeiro as edições do ficheiro (js/dados.js, gerado pelo Exportar)
-   e depois as deste navegador por cima. */
-function applyTexts(texts) {
-  Object.entries(texts || {}).forEach(([k, v]) => {
-    const el = document.querySelector(`[data-e="${k}"]`);
-    if (el) el.innerHTML = v;
-  });
-}
-function colherTextos() {
-  const texts = {};
-  document.querySelectorAll('[data-e]').forEach(el => texts[el.dataset.e] = el.innerHTML);
-  return texts;
-}
-function applySaved() {
-  applyTexts((window.SNORA_EDITS || {}).texts);                          // ficheiro da pasta
-  applyTexts(JSON.parse(localStorage.getItem(EDIT_KEY) || '{}').texts);  // este navegador
-}
-applySaved();
-
-function setEditing(on) {
-  document.body.classList.toggle('editing', on);
-  document.querySelectorAll('[data-e]').forEach(el => el.contentEditable = on);
-  fab.style.display = on ? 'none' : 'flex';
-}
-fab.addEventListener('click', () => { setEditing(true); showToast('✏️ Modo de edição ativo — clique no texto'); });
-document.getElementById('etExit').addEventListener('click', () => setEditing(false));
-
-/* Guardar neste navegador (rápido, mas só visível neste computador) */
-document.getElementById('etSave').addEventListener('click', () => {
-  localStorage.setItem(EDIT_KEY, JSON.stringify({ texts: colherTextos() }));
-  showToast('💾 Texto guardado neste navegador! Para o site, use Exportar.');
-});
-
-/* Exportar o texto editado para um ficheiro js/dados.js que viaja com o site
-   (coloque-o na pasta js/ e as alterações ficam permanentes para todos). */
-document.getElementById('etExport').addEventListener('click', () => {
-  const conteudo = 'window.SNORA_EDITS = ' + JSON.stringify({ texts: colherTextos() }) + ';\n';
-  const blob = new Blob([conteudo], { type: 'text/javascript' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'dados.js';
-  a.click();
-  URL.revokeObjectURL(a.href);
-  showToast('📤 dados.js transferido! Coloque-o na pasta js/ do site.');
-});
-
-document.getElementById('etReset').addEventListener('click', () => {
-  if (confirm('Repor todos os textos originais?')) {
-    localStorage.removeItem(EDIT_KEY);
-    location.reload();
-  }
-});
-
 /* ============ PALETA DE CORES ============
    Para criar uma paleta nova, basta acrescentar uma entrada a PALETAS. */
 const PALETAS = {

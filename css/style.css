@@ -205,37 +205,17 @@
   .prod-card.destaque.visible{transform:scale(1.04)}
   .prod-card.destaque.visible:hover{transform:scale(1.04) translateY(-8px)}
 
-  /* ===== MODO DE EDIÇÃO ===== */
-  .edit-fab{position:fixed;bottom:24px;right:24px;z-index:300;background:var(--wine);color:var(--cream);
-    border:none;border-radius:999px;padding:15px 24px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;
-    cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.25);display:flex;align-items:center;gap:9px;
-    transition:transform .25s, background .25s}
-  .edit-fab:hover{transform:translateY(-3px);background:var(--wine-hover)}
-  .edit-toolbar{position:fixed;bottom:24px;left:50%;transform:translate(-50%,160%);z-index:300;
-    background:#1d1d1d;color:#fff;border-radius:16px;padding:12px 16px;display:flex;gap:10px;align-items:center;
-    flex-wrap:wrap;justify-content:center;max-width:calc(100% - 24px);
-    box-shadow:0 12px 36px rgba(0,0,0,.35);transition:transform .4s cubic-bezier(.2,.7,.3,1)}
-  body.editing .edit-toolbar{transform:translate(-50%,0)}
-  .edit-toolbar button{border:none;border-radius:10px;padding:10px 18px;font-family:'Inter',sans-serif;
-    font-size:13px;font-weight:600;cursor:pointer;transition:filter .2s}
-  .edit-toolbar button:hover{filter:brightness(1.15)}
-  .et-save{background:#3ec46d;color:#0b2a16}
-  .et-export{background:#8AC4FC;color:#15355c}
-  .et-reset{background:#444;color:#eee}
-  .et-exit{background:#222;color:#bbb;border:1px solid #555 !important}
-  .edit-hint{font-size:12px;color:#aaa;padding-right:6px;max-width:250px}
-  body.editing [data-e]{outline:2px dashed rgba(74,127,212,.85);outline-offset:3px;border-radius:4px;cursor:text;min-width:10px}
-  body.editing [data-e]:hover{outline-color:#e0467c;background:rgba(255,255,255,.25)}
+  /* ===== AVISOS (TOAST) ===== */
   .toast{position:fixed;top:90px;left:50%;transform:translate(-50%,-30px);z-index:400;background:#1d1d1d;color:#fff;
     padding:13px 26px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:all .4s}
   .toast.show{opacity:1;transform:translate(-50%,0)}
 
   /* ===== PALETA DE CORES ===== */
-  .palette-fab{position:fixed;bottom:90px;right:24px;z-index:300;background:var(--card-white);border:none;
+  .palette-fab{position:fixed;bottom:24px;right:24px;z-index:300;background:var(--card-white);border:none;
     border-radius:50%;width:54px;height:54px;font-size:23px;cursor:pointer;
     box-shadow:0 8px 24px rgba(0,0,0,.25);transition:transform .25s}
   .palette-fab:hover{transform:translateY(-3px)}
-  .palette-panel{position:fixed;bottom:90px;right:90px;z-index:300;background:#fff;border-radius:18px;
+  .palette-panel{position:fixed;bottom:24px;right:90px;z-index:300;background:#fff;border-radius:18px;
     box-shadow:0 18px 50px rgba(0,0,0,.22);padding:18px;display:none;min-width:230px}
   .palette-panel.open{display:block;animation:riseIn .35s ease}
   .palette-panel h4{font-family:'Fraunces',Georgia,serif;color:var(--wine);font-size:17px;margin-bottom:12px}
@@ -273,7 +253,6 @@
     .footer-grid{grid-template-columns:1fr;text-align:center;justify-items:center}
     .prod-card.destaque,.prod-card.destaque.visible{transform:none}
     .hero{min-height:72vh}
-    .edit-hint{display:none}
-    .edit-toolbar{gap:8px;padding:10px 12px}
-    .edit-toolbar button{padding:9px 14px}
+    /* em mobile as entradas laterais sobem (evita overflow horizontal) */
+    .reveal-left,.reveal-right{transform:translateY(46px)}
   }
