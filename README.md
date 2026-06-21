@@ -10,40 +10,27 @@ Faz duplo clique em `index.html` — abre no browser, sem instalar nada.
 - `index.html` — estrutura da página
 - `css/style.css` — estilos e animações
 - `js/script.js` — carrinho, animações de scroll e modo de edição
+- `js/dados.js` — guarda as tuas edições (textos e imagens novas)
 - `assets/` — imagens e vídeo
-
-## Produtos
-Os cards de produto são gerados a partir da lista `PRODUTOS` no início de
-`js/script.js`. Neste momento há um único brinquedo (o **Dogger**), com três
-tamanhos (Pequeno, Médio e Grande), cada um com o seu preço. O tamanho e o
-preço escolhidos ficam registados no carrinho, que mostra o total.
-
-Para adicionar um brinquedo novo, acrescenta um objeto à lista:
-
-```js
-{
-  id: 'corda',                       // identificador único, sem espaços
-  nome: 'Corda Reforçada',
-  descricao: 'Fibras naturais de alta densidade para jogos de tração.',
-  img: 'assets/corda.jpg',           // coloca a imagem na pasta assets/
-  tamanhos: [                        // cada tamanho com o seu preço…
-    { nome: 'Pequeno', preco: 9.99 },
-    { nome: 'Grande',  preco: 14.99 }
-  ],
-  // …ou, se não tiver tamanhos: tamanhos: [] e preco: 12.99
-  destaque: false                    // true realça o card a azul
-}
-```
-
-A grelha ajusta-se sozinha ao número de produtos (até 3 por linha).
 
 ## Modo de edição
 Clica no botão **✏️ Editar site** (canto inferior direito) para alterar textos
-e substituir imagens. **Guardar** mantém as alterações no teu navegador;
-**Repor original** desfaz tudo.
+e substituir imagens. Botões da barra de edição:
+- **💾 Guardar** — guarda no navegador deste computador (rápido, para continuares).
+- **📤 Exportar p/ ficheiro** — descarrega um `dados.js` com TODAS as tuas
+  alterações (textos + imagens novas).
+- **↩ Repor original** — desfaz tudo.
 
-## Paleta de cores
-O botão **🎨** (por cima do botão de edição) muda as cores de todo o site.
-Há três paletas: **Original** (vinho/creme), **Azul Bebé** e **Verde Campo**;
-a escolha fica guardada no navegador. Para criar uma paleta nova, acrescenta
-uma entrada ao objeto `PALETAS` em `js/script.js` com as mesmas variáveis.
+## ⚠️ Levar as edições para outro computador
+As alterações feitas com **Guardar** ficam apenas no navegador daquele PC — não
+viajam dentro da pasta. Para as levares contigo:
+
+1. No PC onde editaste, abre o site e clica em **📤 Exportar p/ ficheiro**.
+2. Vai à pasta `js/` do site e **substitui o `dados.js`** pelo que acabaste de
+   descarregar (normalmente fica na pasta *Transferências/Downloads*).
+3. Agora faz o ZIP da pasta e envia. Ao abrir o site no outro PC, os textos e as
+   imagens novas aparecem automaticamente. ✅
+
+> Porquê? O navegador, por segurança, não consegue gravar ficheiros sozinho na
+> tua pasta. O `dados.js` é a forma de "congelar" as edições num ficheiro que
+> viaja junto com o site.
