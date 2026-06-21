@@ -6,7 +6,7 @@ const PRODUTOS = [
   {
     id: 'dogger',
     nome: 'Dogger',
-    descricao: 'Alimentador interativo em borracha natural não tóxica: distribui a ração pausadamente, estimula a mente do seu cão e garante uma digestão calma.',
+    descricao: 'Alimentador interativo: distribui a ração pausadamente, estimula a mente do seu cão e garante uma digestão calma.',
     img: 'assets/produto.jpg',
     tamanhos: [
       { nome: 'Pequeno', preco: 14.99 },
