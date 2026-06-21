@@ -55,10 +55,13 @@ prodGrid.addEventListener('click', e => {
   card.querySelector('.prod-price').textContent = fmtPreco(+btn.dataset.preco);
 });
 
-/* ============ REVELAÇÃO AO SCROLL ============ */
+/* ============ REVELAÇÃO AO SCROLL ============
+   Bidirecional: os elementos surgem ao entrar na viewport e voltam a esconder-se
+   ao sair, por isso a animação repete-se sempre que se rola para baixo ou para cima.
+   (rootMargin recorta um pouco em cima/baixo para a transição não disparar coladinha à borda) */
 const io = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
-}, { threshold: 0.15 });
+  entries.forEach(e => e.target.classList.toggle('visible', e.isIntersecting));
+}, { threshold: 0.12, rootMargin: '-8% 0px -8% 0px' });
 document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-zoom').forEach(el => io.observe(el));
 
 /* ============ PARALLAX SUAVE NO HERO ============ */
