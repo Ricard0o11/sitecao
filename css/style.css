@@ -34,7 +34,7 @@
 
   /* ===== HERO ===== */
   .hero{margin-top:-96px;min-height:92vh;display:flex;align-items:center;
-    background:#ae9683 url('../assets/hero.jpg') right center/cover no-repeat;position:relative}
+    background:#ae9683 url('../assets/hero.jpg') center 32%/cover no-repeat;position:relative}
   .hero-inner{padding:140px 6% 80px;max-width:680px}
   .hero h1{font-size:clamp(56px,8.5vw,118px);line-height:.98;letter-spacing:-.01em;
     opacity:0;animation:riseIn 1s .2s cubic-bezier(.2,.7,.3,1) forwards}

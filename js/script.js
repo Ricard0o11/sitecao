@@ -68,7 +68,8 @@ document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-zoom').
 const hero = document.querySelector('.hero');
 window.addEventListener('scroll', () => {
   const y = window.scrollY;
-  if (y < window.innerHeight) hero.style.backgroundPositionY = (y * 0.35) + 'px';
+  // parallax subtil a partir da posição-base (32%), sem saltar para o topo da foto
+  if (y < window.innerHeight) hero.style.backgroundPosition = 'center calc(32% + ' + (y * 0.12) + 'px)';
 }, { passive: true });
 
 /* ============ LINK ATIVO NO MENU ============ */
