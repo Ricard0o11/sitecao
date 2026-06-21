@@ -66,9 +66,17 @@ document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-zoom').
 
 /* ============ LINK ATIVO NO MENU ============ */
 const navLinks = document.querySelectorAll('nav a');
+const siteHeader = document.querySelector('header');
+const navToggle = document.getElementById('navToggle');
+navToggle.addEventListener('click', () => {
+  const open = siteHeader.classList.toggle('nav-open');
+  navToggle.setAttribute('aria-expanded', open);
+});
 navLinks.forEach(a => a.addEventListener('click', () => {
   navLinks.forEach(b => b.classList.remove('active'));
   a.classList.add('active');
+  siteHeader.classList.remove('nav-open');        // fecha o menu (mobile) ao escolher
+  navToggle.setAttribute('aria-expanded', false);
 }));
 
 /* ============ TOAST ============ */
