@@ -126,24 +126,24 @@ renderCart();
 /* ============ MODO DE EDIÇÃO ============ */
 const EDIT_KEY = 'snora_edits';
 const fab = document.getElementById('editFab');
-const picker = document.getElementById('imgPicker');
-let pickTarget = null;
-let pickKind = 'img';   // 'img' = troca o src · 'bg' = troca a imagem de fundo (ex.: hero)
 
-function applySaved() {
-  const data = JSON.parse(localStorage.getItem(EDIT_KEY) || '{}');
-  Object.entries(data.texts || {}).forEach(([k, v]) => {
+/* Só o TEXTO é editável — as imagens são fixas, para não perderem qualidade.
+   Aplica primeiro as edições do ficheiro (js/dados.js, gerado pelo Exportar)
+   e depois as deste navegador por cima. */
+function applyTexts(texts) {
+  Object.entries(texts || {}).forEach(([k, v]) => {
     const el = document.querySelector(`[data-e="${k}"]`);
     if (el) el.innerHTML = v;
   });
-  Object.entries(data.media || {}).forEach(([k, v]) => {
-    const el = document.querySelector(`[data-img="${k}"]`);
-    if (el) el.src = v;
-  });
-  Object.entries(data.backgrounds || {}).forEach(([k, v]) => {
-    const el = document.querySelector(`[data-bg="${k}"]`);
-    if (el) el.style.backgroundImage = v;
-  });
+}
+function colherTextos() {
+  const texts = {};
+  document.querySelectorAll('[data-e]').forEach(el => texts[el.dataset.e] = el.innerHTML);
+  return texts;
+}
+function applySaved() {
+  applyTexts((window.SNORA_EDITS || {}).texts);                          // ficheiro da pasta
+  applyTexts(JSON.parse(localStorage.getItem(EDIT_KEY) || '{}').texts);  // este navegador
 }
 applySaved();
 
@@ -152,69 +152,33 @@ function setEditing(on) {
   document.querySelectorAll('[data-e]').forEach(el => el.contentEditable = on);
   fab.style.display = on ? 'none' : 'flex';
 }
-fab.addEventListener('click', () => { setEditing(true); showToast('✏️ Modo de edição ativo'); });
+fab.addEventListener('click', () => { setEditing(true); showToast('✏️ Modo de edição ativo — clique no texto'); });
 document.getElementById('etExit').addEventListener('click', () => setEditing(false));
 
+/* Guardar neste navegador (rápido, mas só visível neste computador) */
 document.getElementById('etSave').addEventListener('click', () => {
-  const saved = JSON.parse(localStorage.getItem(EDIT_KEY) || '{}');
-  const texts = {}, media = saved.media || {}, backgrounds = saved.backgrounds || {};
-  document.querySelectorAll('[data-e]').forEach(el => texts[el.dataset.e] = el.innerHTML);
-  document.querySelectorAll('[data-img]').forEach(el => {
-    if (el.src.startsWith('data:')) media[el.dataset.img] = el.src;
-  });
-  document.querySelectorAll('[data-bg]').forEach(el => {
-    if (el.style.backgroundImage.includes('data:')) backgrounds[el.dataset.bg] = el.style.backgroundImage;
-  });
-  try {
-    localStorage.setItem(EDIT_KEY, JSON.stringify({ texts, media, backgrounds }));
-    showToast('💾 Alterações guardadas neste navegador!');
-  } catch {
-    showToast('⚠️ Imagem demasiado grande para guardar — usa uma mais pequena.');
-  }
+  localStorage.setItem(EDIT_KEY, JSON.stringify({ texts: colherTextos() }));
+  showToast('💾 Texto guardado neste navegador! Para o site, use Exportar.');
+});
+
+/* Exportar o texto editado para um ficheiro js/dados.js que viaja com o site
+   (coloque-o na pasta js/ e as alterações ficam permanentes para todos). */
+document.getElementById('etExport').addEventListener('click', () => {
+  const conteudo = 'window.SNORA_EDITS = ' + JSON.stringify({ texts: colherTextos() }) + ';\n';
+  const blob = new Blob([conteudo], { type: 'text/javascript' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'dados.js';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast('📤 dados.js transferido! Coloque-o na pasta js/ do site.');
 });
 
 document.getElementById('etReset').addEventListener('click', () => {
-  if (confirm('Repor todos os textos e imagens originais?')) {
+  if (confirm('Repor todos os textos originais?')) {
     localStorage.removeItem(EDIT_KEY);
     location.reload();
   }
-});
-
-/* substituir imagens em modo de edição */
-document.querySelectorAll('[data-img]').forEach(el => {
-  el.addEventListener('click', e => {
-    if (!document.body.classList.contains('editing')) return;
-    e.preventDefault(); e.stopPropagation();
-    pickTarget = el; pickKind = 'img';
-    picker.accept = 'image/*';
-    picker.click();
-  });
-});
-
-/* substituir a imagem de fundo (ex.: topo do site) em modo de edição.
-   Só dispara quando se clica no fundo, não em textos/botões lá dentro. */
-document.querySelectorAll('[data-bg]').forEach(el => {
-  el.addEventListener('click', e => {
-    if (!document.body.classList.contains('editing')) return;
-    if (e.target.closest('[data-e]') || e.target.closest('a, button')) return;
-    e.preventDefault(); e.stopPropagation();
-    pickTarget = el; pickKind = 'bg';
-    picker.accept = 'image/*';
-    picker.click();
-  });
-});
-
-picker.addEventListener('change', () => {
-  const f = picker.files[0];
-  if (!f || !pickTarget) return;
-  const r = new FileReader();
-  r.onload = () => {
-    if (pickKind === 'bg') pickTarget.style.backgroundImage = `url("${r.result}")`;
-    else pickTarget.src = r.result;
-    showToast('🖼️ Substituído! Carregue em Guardar para manter.');
-  };
-  r.readAsDataURL(f);
-  picker.value = '';
 });
 
 /* ============ PALETA DE CORES ============
