@@ -1,8 +1,65 @@
+/* ============ PRODUTOS ============
+   Para adicionar um brinquedo novo, basta acrescentar um objeto a esta lista.
+   - id: identificador único (usado para guardar edições de texto/imagem)
+   - tamanhos: lista de { nome, preco }; se não houver tamanhos usa [] e define "preco" */
+const PRODUTOS = [
+  {
+    id: 'dogger',
+    nome: 'Dogger',
+    descricao: 'Alimentador interativo em borracha natural não tóxica: distribui a ração pausadamente, estimula a mente do seu cão e garante uma digestão calma.',
+    img: 'assets/bola.jpg',
+    tamanhos: [
+      { nome: 'Pequeno', preco: 14.99 },
+      { nome: 'Médio',   preco: 19.99 },
+      { nome: 'Grande',  preco: 24.99 }
+    ],
+    destaque: true
+  }
+];
+
+const fmtPreco = v => v.toFixed(2).replace('.', ',') + ' €';
+
+const prodGrid = document.getElementById('prodGrid');
+prodGrid.innerHTML = PRODUTOS.map((p, i) => {
+  const precoInicial = p.tamanhos.length ? p.tamanhos[0].preco : (p.preco || 0);
+  return `
+  <div class="prod-card${p.destaque ? ' destaque' : ''} reveal-zoom${i ? ' d' + Math.min(i, 3) : ''}">
+    <img src="${p.img}" alt="${p.nome}" data-img="prod_${p.id}">
+    <div class="prod-info">
+      <h3 data-e="prod_${p.id}_t">${p.nome}</h3>
+      <p data-e="prod_${p.id}_p">${p.descricao}</p>
+      ${p.tamanhos.length ? `
+      <div class="sizes" role="group" aria-label="Tamanho">
+        <span class="sizes-label">Tamanho:</span>
+        <div class="size-opts">
+          ${p.tamanhos.map((t, j) => `<button class="size-btn${j === 0 ? ' selected' : ''}" data-size="${t.nome}" data-preco="${t.preco}">${t.nome}</button>`).join('')}
+        </div>
+      </div>` : ''}
+      <div class="prod-buy">
+        <span class="prod-price">${fmtPreco(precoInicial)}</span>
+        <button class="btn-blue add-cart" data-name="${p.nome}" data-preco="${precoInicial}" data-e="prod_${p.id}_b">COMPRAR AGORA</button>
+      </div>
+    </div>
+  </div>`;
+}).join('');
+
+/* com um único produto a grelha passa a um bloco grande horizontal (ver .prod-grid.single no CSS) */
+prodGrid.classList.toggle('single', PRODUTOS.length === 1);
+
+prodGrid.addEventListener('click', e => {
+  const btn = e.target.closest('.size-btn');
+  if (!btn || document.body.classList.contains('editing')) return;
+  const card = btn.closest('.prod-card');
+  card.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  card.querySelector('.prod-price').textContent = fmtPreco(+btn.dataset.preco);
+});
+
 /* ============ REVELAÇÃO AO SCROLL ============ */
 const io = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
 }, { threshold: 0.15 });
-document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-zoom').forEach(el => io.observe(el));
 
 /* ============ PARALLAX SUAVE NO HERO ============ */
 const hero = document.querySelector('.hero');
@@ -29,7 +86,9 @@ function showToast(msg) {
 }
 
 /* ============ CARRINHO ============ */
-let cart = JSON.parse(localStorage.getItem('snora_cart') || '[]');
+/* cada item é { n: nome, p: preço }; entradas antigas em formato texto são descartadas */
+let cart = (JSON.parse(localStorage.getItem('snora_cart') || '[]') || [])
+  .filter(i => i && typeof i === 'object' && i.n);
 const cartCount = document.getElementById('cartCount');
 const cartPanel = document.getElementById('cartPanel');
 const cartItems = document.getElementById('cartItems');
@@ -39,23 +98,32 @@ function renderCart() {
   if (!cart.length) {
     cartItems.innerHTML = '<p class="cart-empty">Ainda está vazio… adicione um brinquedo! 🐶</p>';
   } else {
-    const counts = {};
-    cart.forEach(n => counts[n] = (counts[n] || 0) + 1);
-    cartItems.innerHTML = Object.entries(counts).map(([n, q]) =>
-      `<div class="cart-item"><span>${n} × ${q}</span><button data-rm="${n}" title="Remover">✕</button></div>`).join('');
+    const groups = {};
+    cart.forEach(i => {
+      const g = groups[i.n] = groups[i.n] || { q: 0, p: i.p || 0 };
+      g.q++;
+    });
+    const total = cart.reduce((s, i) => s + (i.p || 0), 0);
+    cartItems.innerHTML = Object.entries(groups).map(([n, g]) =>
+      `<div class="cart-item"><span>${n} × ${g.q}</span>
+        <span class="cart-line"><b>${fmtPreco(g.p * g.q)}</b><button data-rm="${n}" title="Remover">✕</button></span></div>`).join('')
+      + `<div class="cart-total"><span>Total</span><b>${fmtPreco(total)}</b></div>`;
   }
   localStorage.setItem('snora_cart', JSON.stringify(cart));
 }
 document.getElementById('cartBtn').addEventListener('click', () => cartPanel.classList.toggle('open'));
 cartItems.addEventListener('click', e => {
   const rm = e.target.dataset.rm;
-  if (rm) { cart.splice(cart.indexOf(rm), 1); renderCart(); }
+  if (rm) { cart.splice(cart.findIndex(i => i.n === rm), 1); renderCart(); }
 });
 document.querySelectorAll('.add-cart').forEach(b => b.addEventListener('click', () => {
   if (document.body.classList.contains('editing')) return;
-  cart.push(b.dataset.name);
+  const sel = b.closest('.prod-card')?.querySelector('.size-btn.selected');
+  const nome = sel ? `${b.dataset.name} (${sel.dataset.size})` : b.dataset.name;
+  const preco = +(sel ? sel.dataset.preco : b.dataset.preco) || 0;
+  cart.push({ n: nome, p: preco });
   renderCart();
-  showToast('🛒 ' + b.dataset.name + ' adicionado ao carrinho!');
+  showToast('🛒 ' + nome + ' adicionado ao carrinho!');
 }));
 renderCart();
 
@@ -64,11 +132,10 @@ const EDIT_KEY = 'snora_edits';
 const fab = document.getElementById('editFab');
 const picker = document.getElementById('imgPicker');
 let pickTarget = null;
+let pickKind = 'img';   // 'img' = troca o src · 'bg' = troca a imagem de fundo (ex.: hero)
 
-/* Edições base que viajam na pasta (js/dados.js). O localStorage tem
-   prioridade, para que as alterações recentes neste PC apareçam por cima. */
-function applyEdits(data) {
-  if (!data) return;
+function applySaved() {
+  const data = JSON.parse(localStorage.getItem(EDIT_KEY) || '{}');
   Object.entries(data.texts || {}).forEach(([k, v]) => {
     const el = document.querySelector(`[data-e="${k}"]`);
     if (el) el.innerHTML = v;
@@ -77,22 +144,12 @@ function applyEdits(data) {
     const el = document.querySelector(`[data-img="${k}"]`);
     if (el) el.src = v;
   });
-}
-function applySaved() {
-  applyEdits(window.SNORA_EDITS);                                   // ficheiro da pasta
-  applyEdits(JSON.parse(localStorage.getItem(EDIT_KEY) || '{}'));   // este navegador
+  Object.entries(data.backgrounds || {}).forEach(([k, v]) => {
+    const el = document.querySelector(`[data-bg="${k}"]`);
+    if (el) el.style.backgroundImage = v;
+  });
 }
 applySaved();
-
-/* Reúne o estado atual da página (textos + imagens) num objeto. */
-function colherEdicoes() {
-  const texts = {}, media = {};
-  document.querySelectorAll('[data-e]').forEach(el => texts[el.dataset.e] = el.innerHTML);
-  document.querySelectorAll('[data-img]').forEach(el => {
-    if (el.src.startsWith('data:')) media[el.dataset.img] = el.src;
-  });
-  return { texts, media };
-}
 
 function setEditing(on) {
   document.body.classList.toggle('editing', on);
@@ -103,24 +160,21 @@ fab.addEventListener('click', () => { setEditing(true); showToast('✏️ Modo d
 document.getElementById('etExit').addEventListener('click', () => setEditing(false));
 
 document.getElementById('etSave').addEventListener('click', () => {
+  const saved = JSON.parse(localStorage.getItem(EDIT_KEY) || '{}');
+  const texts = {}, media = saved.media || {}, backgrounds = saved.backgrounds || {};
+  document.querySelectorAll('[data-e]').forEach(el => texts[el.dataset.e] = el.innerHTML);
+  document.querySelectorAll('[data-img]').forEach(el => {
+    if (el.src.startsWith('data:')) media[el.dataset.img] = el.src;
+  });
+  document.querySelectorAll('[data-bg]').forEach(el => {
+    if (el.style.backgroundImage.includes('data:')) backgrounds[el.dataset.bg] = el.style.backgroundImage;
+  });
   try {
-    localStorage.setItem(EDIT_KEY, JSON.stringify(colherEdicoes()));
-    showToast('💾 Guardado neste navegador! Para levar a outro PC, use Exportar.');
+    localStorage.setItem(EDIT_KEY, JSON.stringify({ texts, media, backgrounds }));
+    showToast('💾 Alterações guardadas neste navegador!');
   } catch {
-    showToast('⚠️ Imagem demasiado grande para guardar — use uma mais pequena.');
+    showToast('⚠️ Imagem demasiado grande para guardar — usa uma mais pequena.');
   }
-});
-
-/* Exporta as edições para um ficheiro js/dados.js que viaja com a pasta. */
-document.getElementById('etExport').addEventListener('click', () => {
-  const conteudo = 'window.SNORA_EDITS = ' + JSON.stringify(colherEdicoes()) + ';\n';
-  const blob = new Blob([conteudo], { type: 'text/javascript' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'dados.js';
-  a.click();
-  URL.revokeObjectURL(a.href);
-  showToast('📤 dados.js transferido! Coloque-o na pasta js/ do site.');
 });
 
 document.getElementById('etReset').addEventListener('click', () => {
@@ -130,23 +184,102 @@ document.getElementById('etReset').addEventListener('click', () => {
   }
 });
 
-/* substituir imagens / vídeo em modo de edição */
+/* substituir imagens em modo de edição */
 document.querySelectorAll('[data-img]').forEach(el => {
   el.addEventListener('click', e => {
     if (!document.body.classList.contains('editing')) return;
     e.preventDefault(); e.stopPropagation();
-    pickTarget = el;
-    picker.accept = el.tagName === 'VIDEO' ? 'video/mp4,video/webm' : 'image/*';
+    pickTarget = el; pickKind = 'img';
+    picker.accept = 'image/*';
     picker.click();
   });
 });
+
+/* substituir a imagem de fundo (ex.: topo do site) em modo de edição.
+   Só dispara quando se clica no fundo, não em textos/botões lá dentro. */
+document.querySelectorAll('[data-bg]').forEach(el => {
+  el.addEventListener('click', e => {
+    if (!document.body.classList.contains('editing')) return;
+    if (e.target.closest('[data-e]') || e.target.closest('a, button')) return;
+    e.preventDefault(); e.stopPropagation();
+    pickTarget = el; pickKind = 'bg';
+    picker.accept = 'image/*';
+    picker.click();
+  });
+});
+
 picker.addEventListener('change', () => {
   const f = picker.files[0];
   if (!f || !pickTarget) return;
   const r = new FileReader();
-  r.onload = () => { pickTarget.src = r.result; showToast('🖼️ Substituído! Carregue em Guardar para manter.'); };
+  r.onload = () => {
+    if (pickKind === 'bg') pickTarget.style.backgroundImage = `url("${r.result}")`;
+    else pickTarget.src = r.result;
+    showToast('🖼️ Substituído! Carregue em Guardar para manter.');
+  };
   r.readAsDataURL(f);
   picker.value = '';
+});
+
+/* ============ PALETA DE CORES ============
+   Para criar uma paleta nova, basta acrescentar uma entrada a PALETAS. */
+const PALETAS = {
+  original: {
+    nome: 'Original',
+    cores: {
+      '--cream': '#FBFACF', '--cream-bg': '#FCFBEF',
+      '--wine': '#4B0B22', '--wine-dark': '#3A0517', '--wine-hover': '#69163A',
+      '--pink': '#EFE4E7',
+      '--blue': '#8AC4FC', '--blue-name': '#4A7FD4', '--blue-ink': '#15355C',
+      '--card-white': '#FDFCF6', '--ink': '#2A2A2A'
+    }
+  },
+  azulbebe: {
+    nome: 'Azul Bebé',
+    cores: {
+      '--cream': '#D9EDFB', '--cream-bg': '#F2F9FE',
+      '--wine': '#1F5E8C', '--wine-dark': '#16466A', '--wine-hover': '#2D76AB',
+      '--pink': '#E2F1FC',
+      '--blue': '#89CFF0', '--blue-name': '#3E7BC0', '--blue-ink': '#14456B',
+      '--card-white': '#FDFEFF', '--ink': '#243341'
+    }
+  },
+  verde: {
+    nome: 'Verde Campo',
+    cores: {
+      '--cream': '#E9F3D8', '--cream-bg': '#F7FBEF',
+      '--wine': '#2F5D2E', '--wine-dark': '#224724', '--wine-hover': '#3F7A3E',
+      '--pink': '#E4EFDB',
+      '--blue': '#A9D8A0', '--blue-name': '#4E8B4C', '--blue-ink': '#1D4A1F',
+      '--card-white': '#FCFEF8', '--ink': '#2A332A'
+    }
+  }
+};
+
+const PAL_KEY = 'snora_palette';
+const paletteFab = document.getElementById('paletteFab');
+const palettePanel = document.getElementById('palettePanel');
+
+palettePanel.innerHTML = '<h4>Cores do site</h4>' + Object.entries(PALETAS).map(([id, p]) => `
+  <button class="pal-opt" data-pal="${id}">
+    <span class="pal-dots">${['--wine', '--cream', '--blue'].map(k => `<i style="background:${p.cores[k]}"></i>`).join('')}</span>
+    ${p.nome}
+  </button>`).join('');
+
+function applyPalette(id) {
+  const p = PALETAS[id] || PALETAS.original;
+  Object.entries(p.cores).forEach(([k, v]) => document.documentElement.style.setProperty(k, v));
+  palettePanel.querySelectorAll('.pal-opt').forEach(b => b.classList.toggle('selected', PALETAS[b.dataset.pal] === p));
+  localStorage.setItem(PAL_KEY, id);
+}
+applyPalette(localStorage.getItem(PAL_KEY) || 'original');
+
+paletteFab.addEventListener('click', () => palettePanel.classList.toggle('open'));
+palettePanel.addEventListener('click', e => {
+  const b = e.target.closest('.pal-opt');
+  if (!b) return;
+  applyPalette(b.dataset.pal);
+  showToast('🎨 Paleta ' + (PALETAS[b.dataset.pal] || PALETAS.original).nome + ' aplicada!');
 });
 
 /* evitar seguir links durante a edição */
